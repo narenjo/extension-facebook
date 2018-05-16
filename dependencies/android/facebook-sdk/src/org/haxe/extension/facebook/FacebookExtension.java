@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,6 +45,9 @@ import java.security.NoSuchAlgorithmException;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
 
+import java.math.BigDecimal;
+import java.util.Currency;
+
 public class FacebookExtension extends Extension {
 
 	static AccessTokenTracker accessTokenTracker;
@@ -51,11 +55,12 @@ public class FacebookExtension extends Extension {
 	static GameRequestDialog requestDialog;
 	static SecureHaxeObject callbacks;
 	static ShareDialog shareDialog;
+	static AppEventsLogger logger;
 	static final String TAG = "FACEBOOK-EXTENSION";
 
 	public FacebookExtension() {
 
-		FacebookSdk.sdkInitialize(mainContext);
+		//FacebookSdk.sdkInitialize(mainContext);
 		requestDialog = new GameRequestDialog(mainActivity);
 		shareDialog = new ShareDialog(mainActivity);
 
@@ -64,7 +69,9 @@ public class FacebookExtension extends Extension {
 		}
 
 		callbackManager = CallbackManager.Factory.create();
-
+		
+		logger = AppEventsLogger.newLogger(mainActivity);
+		
 		LoginManager.getInstance().registerCallback(callbackManager,
 
 			new FacebookCallback<LoginResult>() {
@@ -416,6 +423,12 @@ public class FacebookExtension extends Extension {
 		});
 
 	}
+	
+	public static void trackPurchase(float purchaseAmount, String currency, String parameters)
+	{
+		// Bundle parameters
+		logger.logPurchase(BigDecimal.valueOf(purchaseAmount), Currency.getInstance(currency));
+	}
 
 	// !Static methods interface
 
@@ -423,7 +436,7 @@ public class FacebookExtension extends Extension {
 
 		try {
 			PackageInfo info = mainContext.getPackageManager().getPackageInfo(
-				"com.sample.srvtest",
+				"com.nevosoft.charmfarm",
 				PackageManager.GET_SIGNATURES
 			);
 			for (Signature signature : info.signatures) {
@@ -440,7 +453,9 @@ public class FacebookExtension extends Extension {
 	}
 
 	@Override public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
-		callbackManager.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+		if(!callbackManager.onActivityResult(requestCode, resultCode, data))
+			Log.d(TAG, "callbackManager.onActivityResult cannot be handled requestCode: " + requestCode);
 		return true;
 	}
 

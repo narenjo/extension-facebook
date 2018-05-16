@@ -361,4 +361,10 @@ class Facebook extends TaskExecutor {
 		#end
 	}
 
+	public function trackPurchase(purchaseAmount:Float, currency:String, ?parameters:String)
+	{
+		#if android
+		FacebookCFFI.trackPurchase(purchaseAmount, currency, parameters);
+		#end
+	}
 }
