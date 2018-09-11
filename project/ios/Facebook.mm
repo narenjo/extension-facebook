@@ -106,7 +106,7 @@ namespace extension_facebook {
 
 		FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
 		content.contentURL = [NSURL URLWithString:[NSString stringWithUTF8String:contentURL.c_str()]];
-		if (contentTitle!="") {
+		/*if (contentTitle!="") {
 			content.contentTitle = [NSString stringWithUTF8String:contentTitle.c_str()];
 		}
 		if (imageURL!="") {
@@ -114,7 +114,7 @@ namespace extension_facebook {
 		}
 		if (contentDescription!="") {
 			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
-		}
+		}*/
 
 		int osVersion = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion;
 		FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
