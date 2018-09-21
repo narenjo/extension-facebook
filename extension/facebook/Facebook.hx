@@ -361,6 +361,13 @@ class Facebook extends TaskExecutor {
 		#end
 	}
 
+	public function logEvent(eventName:String, jsonPayload:String)
+	{
+		#if android
+			FacebookCFFI.logEvent(eventName, jsonPayload);
+		#end
+	}
+
 	public function setUserID(userID:String)
 	{
 		#if android

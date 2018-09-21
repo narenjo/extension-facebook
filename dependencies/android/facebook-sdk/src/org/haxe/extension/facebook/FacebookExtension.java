@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import com.facebook.LoggingBehavior;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.appevents.AppEventsLogger;
@@ -424,7 +425,38 @@ public class FacebookExtension extends Extension {
 
 	}
 
+    private static Map<String, String> getPayloadFromJson(String jsonString) {
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        Map<String, String> payload = new Gson().fromJson(jsonString, type);
+        return payload;
+    }
+
+
+    private static Bundle getAnalyticsBundleFromJson(String jsonString) {
+        Map<String, String> payloadMap = getPayloadFromJson(jsonString);
+        Bundle payloadBundle = new Bundle();
+        for (Map.Entry<String, String> entry : payloadMap.entrySet()) {
+            payloadBundle.putString(entry.getKey(), entry.getValue());
+        }
+
+        return payloadBundle;
+    }
+
+    public static void logEvent(String eventName, String jsonPayload)
+    {
+        Bundle payloadBundle = getAnalyticsBundleFromJson(jsonPayload);
+        logger.logEvent(eventName, payloadBundle);
+    }
+
+    public static void setDebug()
+    {
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+    }
+
     public static void setUserID(String userID) {
+        Log.d(TAG, "setUserID to: " + userID);
+
         logger.setUserID(userID);
         logger.updateUserProperties(
                 new Bundle(),
@@ -448,7 +480,6 @@ public class FacebookExtension extends Extension {
                             }
                         }
                     }
-
                 }
         );
     }
