@@ -155,7 +155,7 @@ class FacebookExtension {
 			"setDebug",
 			"()V"
 		);
-		JNI.callStatic(fn, [eventName, jsonPayload]);
+		JNI.callStatic(fn, []);
 	}
 
 	public static function logEvent(eventName:String, jsonPayload:String)
