@@ -361,10 +361,17 @@ class Facebook extends TaskExecutor {
 		#end
 	}
 
+	public function setUserID(userID:String)
+	{
+		#if android
+			FacebookCFFI.setUserID(userID);
+		#end
+	}
+
 	public function trackPurchase(purchaseAmount:Float, currency:String, ?parameters:String)
 	{
 		#if android
-		FacebookCFFI.trackPurchase(purchaseAmount, currency, parameters);
+			FacebookCFFI.trackPurchase(purchaseAmount, currency, parameters);
 		#end
 	}
 }

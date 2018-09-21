@@ -423,7 +423,36 @@ public class FacebookExtension extends Extension {
 		});
 
 	}
-	
+
+    public static void setUserID(String userID) {
+        logger.setUserID(userID);
+        logger.updateUserProperties(
+                new Bundle(),
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (callbacks!=null) {
+                            FacebookRequestError error = response.getError();
+                            GraphRequest req = response.getRequest();
+                            if (error==null) {
+                                Log.d(TAG, "on setUserID success");
+                            } else {
+                                String errorMessage;
+
+                                if (error.getRequestResult() == null) {
+                                    errorMessage = "{}";
+                                } else {
+                                    errorMessage = error.getRequestResult().toString();
+                                }
+                                Log.d(TAG, "on setUserID error: " + errorMessage);
+                            }
+                        }
+                    }
+
+                }
+        );
+    }
+
 	public static void trackPurchase(float purchaseAmount, String currency, String parameters)
 	{
 		// Bundle parameters
