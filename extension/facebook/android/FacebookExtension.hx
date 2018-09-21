@@ -148,6 +148,16 @@ class FacebookExtension {
 		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
 	}
 
+	public static function setDebug()
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"setDebug",
+			"()V"
+		);
+		JNI.callStatic(fn, [eventName, jsonPayload]);
+	}
+
 	public static function logEvent(eventName:String, jsonPayload:String)
 	{
 		var fn = JNI.createStaticMethod(
