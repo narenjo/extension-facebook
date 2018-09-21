@@ -148,6 +148,16 @@ class FacebookExtension {
 		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
 	}
 
+	public static function logEvent(eventName:String, jsonPayload:String)
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"logEvent",
+			"(Ljava/lang/String;Ljava/lang/String;)V"
+		);
+		JNI.callStatic(fn, [eventName, jsonPayload]);
+	}
+
 	public static function setUserID(userID:String)
 	{
 		var fn = JNI.createStaticMethod(
