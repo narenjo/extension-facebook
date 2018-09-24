@@ -455,6 +455,8 @@ public class FacebookExtension extends Extension {
 
     public static void setDebug()
     {
+        Log.d(TAG, "DEBUG mode used");
+
         FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
@@ -501,7 +503,7 @@ public class FacebookExtension extends Extension {
 
 		try {
 			PackageInfo info = mainContext.getPackageManager().getPackageInfo(
-				"com.nevosoft.charmfarm",
+                mainContext.getPackageName(),
 				PackageManager.GET_SIGNATURES
 			);
 			for (Signature signature : info.signatures) {
