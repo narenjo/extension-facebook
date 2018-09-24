@@ -449,6 +449,8 @@ public class FacebookExtension extends Extension {
 
     public static void logEvent(String eventName, String jsonPayload)
     {
+        Log.d(TAG, "log event " + eventName + " with payload: " + jsonPayload);
+
         Bundle payloadBundle = getAnalyticsBundleFromJson(jsonPayload);
         logger.logEvent(eventName, payloadBundle);
     }
