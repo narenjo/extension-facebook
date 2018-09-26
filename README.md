@@ -37,6 +37,13 @@ if (facebook.accessToken!="") { // Only login if the user is not already logged 
 }
 ```
 
+Custom events:
+```Haxe
+extension.facebook.Facebook.getInstance().setUserID(userID:String);
+extension.facebook.Facebook.getInstance().logEvent(eventName:String, jsonPayload:String);
+extension.facebook.Facebook.getInstance().trackPurchase(purchaseAmount:Float, currency:String, ?parameters:String)
+```
+
 Send app invite:
 ```Haxe
 // See https://developers.facebook.com/docs/applinks
