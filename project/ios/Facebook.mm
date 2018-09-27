@@ -1,6 +1,8 @@
 #import <CallbacksDelegate.h>
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKAppInviteContent.h>
 #import <FBSDKShareKit/FBSDKAppInviteDialog.h>
@@ -47,6 +49,26 @@ namespace extension_facebook {
 
 	}
 
+	void setDebug() {
+		NSLog(@"Facebook: set debug mode");
+		[FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
+	}
+	
+	void logEvent(NSString name, NSString payload) {
+		NSLog(@"Facebook: logEvent name= %@, payload= %@", name, payload);
+		
+		NSData * jsonData = [payload dataUsingEncoding:NSUTF8StringEncoding];
+		NSError * error = nil;
+		NSDictionary * params = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:&error];
+		
+		[FBSDKAppEvents logEvent:name parameters:params];
+	}
+	
+	void logPurchase(double value, std::string currency) {
+		NSLog(@"Facebook: logPurchase value= %@, currency= %@", value, currency);
+		[FBSDKAppEvents logPurchase:value currency:currency];
+	}
+	
 	void logOut() {
 		[login logOut];
 	}

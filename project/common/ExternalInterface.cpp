@@ -83,6 +83,30 @@ static value extension_facebook_logout() {
 }
 DEFINE_PRIM(extension_facebook_logout, 0);
 
+static value extension_facebook_logPurchase(value val, value currency) {
+	extension_facebook::logPurchase(
+		val,
+		safe_val_string(currency)
+	);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_logPurchase, 2);
+
+static value extension_facebook_logEvent(value name, value payload) {
+	extension_facebook::logEvent(
+		safe_val_string(name),
+		safe_val_string(payload)
+	);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_logEvent, 2);
+
+static value extension_facebook_setDebug() {
+	extension_facebook::setDebug();
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setDebug, 0);
+
 static value extension_facebook_logInWithPublishPermissions(value permissions) {
 	int n = 0;
 	if (permissions!=NULL) {
