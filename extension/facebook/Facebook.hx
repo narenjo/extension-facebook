@@ -363,14 +363,14 @@ class Facebook extends TaskExecutor {
 
 	public function setDebug()
 	{
-		#if android
+		#if (android || ios)
 			FacebookCFFI.setDebug();
 		#end
 	}
 
 	public function logEvent(eventName:String, jsonPayload:String)
 	{
-		#if android
+		#if (android || ios)
 			FacebookCFFI.logEvent(eventName, jsonPayload);
 		#end
 	}
@@ -386,6 +386,9 @@ class Facebook extends TaskExecutor {
 	{
 		#if android
 			FacebookCFFI.trackPurchase(purchaseAmount, currency, parameters);
+		#end
+		#if ios
+			FacebookCFFI.logPurchase(purchaseAmount, currency);
 		#end
 	}
 }

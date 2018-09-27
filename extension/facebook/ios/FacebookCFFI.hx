@@ -58,7 +58,10 @@ class FacebookCFFI {
 	}
 
 	@CPP public static function init(onTokenChange : String->Void) {}
-	@CPP public static function logout();
+	@CPP public static function logout() {}
+	@CPP public static function setDebug() {}
+	@CPP public static function logEvent(eventName:String, jsonPayload:String) {}
+	@CPP public static function logPurchase(purchaseAmount:Float, currency:String) {}
 	@CPP public static function logInWithPublishPermissions(permissions : Array<String> = null) {}
 	@CPP public static function logInWithReadPermissions(permissions : Array<String> = null) {}
 
