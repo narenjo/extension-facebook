@@ -50,12 +50,12 @@ namespace extension_facebook {
 	}
 
 	void setDebug() {
-		NSLog(@"Facebook: set debug mode");
+		//NSLog(@"Facebook: set debug mode");
 		[FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
 	}
 	
-	void logEvent(NSString name, NSString payload) {
-		NSLog(@"Facebook: logEvent name= %@, payload= %@", name, payload);
+	void logEvent(NSString* name, NSString* payload) {
+		//NSLog(@"Facebook: logEvent name= %@, payload= %@", name, payload);
 		
 		NSData * jsonData = [payload dataUsingEncoding:NSUTF8StringEncoding];
 		NSError * error = nil;
@@ -64,8 +64,8 @@ namespace extension_facebook {
 		[FBSDKAppEvents logEvent:name parameters:params];
 	}
 	
-	void logPurchase(double value, std::string currency) {
-		NSLog(@"Facebook: logPurchase value= %@, currency= %@", value, currency);
+	void logPurchase(double value, NSString* currency) {
+		//NSLog(@"Facebook: logPurchase value= %@, currency= %@", value, currency);
 		[FBSDKAppEvents logPurchase:value currency:currency];
 	}
 	

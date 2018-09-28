@@ -33,6 +33,10 @@ namespace extension_facebook {
 
 	void onTokenChange(const char *token);
 
+    void setDebug();
+    void logEvent(std::string name, std::string payload);
+    void logPurchase(double val, std::string currency);
+    
 	void onLoginSuccessCallback();
 	void onLoginCancelCallback();
 	void onLoginErrorCallback(const char *error);
