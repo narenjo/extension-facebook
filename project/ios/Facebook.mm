@@ -50,23 +50,26 @@ namespace extension_facebook {
 	}
 
 	void setDebug() {
-		//NSLog(@"Facebook: set debug mode");
+		NSLog(@"Facebook: set debug mode");
 		[FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
 	}
 	
-	void logEvent(NSString* name, NSString* payload) {
-		//NSLog(@"Facebook: logEvent name= %@, payload= %@", name, payload);
+	void logEvent(std::string name, std::string payload) {
+		NSLog(@"Facebook: logEvent name= %s, payload= %s", name.c_str(), payload.c_str());
 		
-		NSData * jsonData = [payload dataUsingEncoding:NSUTF8StringEncoding];
+        NSString * nsName = [[NSString alloc] initWithUTF8String:name.c_str()];
+        NSString * nsPayload = [[NSString alloc] initWithUTF8String:payload.c_str()];
+		NSData * jsonData = [nsPayload dataUsingEncoding:NSUTF8StringEncoding];
 		NSError * error = nil;
 		NSDictionary * params = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:&error];
 		
-		[FBSDKAppEvents logEvent:name parameters:params];
+		[FBSDKAppEvents logEvent:nsName parameters:params];
 	}
 	
-	void logPurchase(double value, NSString* currency) {
+	void logPurchase(double value, std::string currency) {
 		//NSLog(@"Facebook: logPurchase value= %@, currency= %@", value, currency);
-		[FBSDKAppEvents logPurchase:value currency:currency];
+        NSString * nsCurrency = [[NSString alloc] initWithUTF8String:currency.c_str()];
+		[FBSDKAppEvents logPurchase:value currency:nsCurrency];
 	}
 	
 	void logOut() {
