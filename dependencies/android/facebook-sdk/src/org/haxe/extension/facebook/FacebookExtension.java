@@ -496,7 +496,8 @@ public class FacebookExtension extends Extension {
 	public static void trackPurchase(float purchaseAmount, String currency, String parameters)
 	{
 		// Bundle parameters
-		logger.logPurchase(BigDecimal.valueOf(purchaseAmount), Currency.getInstance(currency));
+		Bundle bundle = getAnalyticsBundleFromJson(parameters);
+		logger.logPurchase(BigDecimal.valueOf(purchaseAmount), Currency.getInstance(currency), bundle);
 	}
 
 	// !Static methods interface
