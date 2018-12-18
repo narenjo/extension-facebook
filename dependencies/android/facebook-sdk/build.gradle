@@ -25,7 +25,7 @@ android {
 
 dependencies {
     compile project(':deps:extension-api')
-	compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-	compile 'com.facebook.android:facebook-marketing:[4,5)' 
-	compile 'com.google.code.gson:gson:2.8.5'
+	implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+	implementation 'com.facebook.android:facebook-marketing:[4,5)' 
+	implementation 'com.google.code.gson:gson:2.8.5'
 }
