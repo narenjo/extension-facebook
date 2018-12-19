@@ -25,14 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   The AccountKit error domain.
  */
-FOUNDATION_EXPORT NSErrorDomain const AKFErrorDomain;
+extern NSErrorDomain const AKFErrorDomain;
 
 #else
 
 /**
  The AccountKit error domain.
  */
-FOUNDATION_EXPORT NSString *const AKFErrorDomain;
+extern NSString *const AKFErrorDomain;
 
 #endif
 
@@ -41,34 +41,34 @@ FOUNDATION_EXPORT NSString *const AKFErrorDomain;
 /**
  The userInfo key for the developer message in errors.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const AKFErrorDeveloperMessageKey;
+extern NSErrorUserInfoKey const AKFErrorDeveloperMessageKey;
 
 /**
  The userInfo key for the user message in errors.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const AKFErrorUserMessageKey;
+extern NSErrorUserInfoKey const AKFErrorUserMessageKey;
 
 /**
  The userInfo key for the object that caused the error.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const AKFErrorObjectKey;
+extern NSErrorUserInfoKey const AKFErrorObjectKey;
 
 #else
 
 /**
   The userInfo key for the developer message in errors.
  */
-FOUNDATION_EXPORT NSString *const AKFErrorDeveloperMessageKey;
+extern NSString *const AKFErrorDeveloperMessageKey;
 
 /**
   The userInfo key for the user message in errors.
  */
-FOUNDATION_EXPORT NSString *const AKFErrorUserMessageKey;
+extern NSString *const AKFErrorUserMessageKey;
 
 /**
   The userInfo key for the object that caused the error.
  */
-FOUNDATION_EXPORT NSString *const AKFErrorObjectKey;
+extern NSString *const AKFErrorObjectKey;
 
 #endif
 

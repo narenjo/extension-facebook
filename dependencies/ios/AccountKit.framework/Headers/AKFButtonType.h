@@ -76,4 +76,4 @@ typedef NS_ENUM(NSUInteger, AKFButtonType)
   AKFButtonTypeSubmit,
 };
 
-FOUNDATION_EXPORT const NSUInteger AKFButtonTypeCount;
+extern const NSUInteger AKFButtonTypeCount;

@@ -27,14 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The AccountKit error domain for server errors (underlying errors).
  */
-FOUNDATION_EXPORT NSErrorDomain const AKFServerErrorDomain;
+extern NSErrorDomain const AKFServerErrorDomain;
 
 #else
 
 /**
   The AccountKit error domain for server errors (underlying errors).
  */
-FOUNDATION_EXPORT NSString *const AKFServerErrorDomain;
+extern NSString *const AKFServerErrorDomain;
 
 #endif
 
