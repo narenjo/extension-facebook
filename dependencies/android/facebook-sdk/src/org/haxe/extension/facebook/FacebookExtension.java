@@ -220,32 +220,37 @@ public class FacebookExtension extends Extension {
 	public static void init(HaxeObject _callbacks) {
 
 		callbacks = new SecureHaxeObject(_callbacks, mainActivity, TAG);
+		
+		try {
+		
+			accessTokenTracker = new AccessTokenTracker() {
+				@Override
+				protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+					if (callbacks!=null) {
+						if (currentAccessToken!=null) {
+							callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+						} else {
+							callbacks.call1("_onTokenChange", "");
+						}
+					}
+				}
+			};
 
-		accessTokenTracker = new AccessTokenTracker() {
-			@Override
-			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-				if (callbacks!=null) {
-					if (currentAccessToken!=null) {
-						callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+			mainActivity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AccessToken token = AccessToken.getCurrentAccessToken();
+					if (token!=null) {
+						callbacks.call1("_onTokenChange", token.getToken());
 					} else {
 						callbacks.call1("_onTokenChange", "");
 					}
 				}
-			}
-		};
-
-		mainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            	AccessToken token = AccessToken.getCurrentAccessToken();
-				if (token!=null) {
-					callbacks.call1("_onTokenChange", token.getToken());
-				} else {
-					callbacks.call1("_onTokenChange", "");
-				}
-			}
-		});
-
+			});
+		
+		} catch (ExceptionInInitializerError error) {
+			callbacks.call1("_onTokenChange", "");
+		}
 	}
 
 	public static void logout() {
