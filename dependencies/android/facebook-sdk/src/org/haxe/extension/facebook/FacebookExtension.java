@@ -222,7 +222,6 @@ public class FacebookExtension extends Extension {
 		callbacks = new SecureHaxeObject(_callbacks, mainActivity, TAG);
 		
 		try {
-		
 			accessTokenTracker = new AccessTokenTracker() {
 				@Override
 				protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -239,10 +238,15 @@ public class FacebookExtension extends Extension {
 			mainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AccessToken token = AccessToken.getCurrentAccessToken();
-					if (token!=null) {
-						callbacks.call1("_onTokenChange", token.getToken());
-					} else {
+					try 
+					{
+						AccessToken token = AccessToken.getCurrentAccessToken();
+						if (token!=null) {
+							callbacks.call1("_onTokenChange", token.getToken());
+						} else {
+							callbacks.call1("_onTokenChange", "");
+						}
+					} catch (ExceptionInInitializerError error) {
 						callbacks.call1("_onTokenChange", "");
 					}
 				}
