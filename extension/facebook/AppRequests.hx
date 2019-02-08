@@ -72,6 +72,39 @@ class AppRequests {
 			options.filters,
 			options.data
 		);
+		#elseif html5
+		var newOpt:GameRequestDialogParams = {
+			method: "apprequest",
+			message: options.message,
+		};
+		if(options.title != null){
+			newOpt.title = options.title;
+		}
+		if(options.objectId != null){
+			newOpt.object_id = options.objectId;
+		}
+		if(options.data != null){
+			newOpt.data = options.data;
+		}
+		if(options.recipients != null){
+			newOpt.to = options.recipients.join(",");
+		}
+		switch(options.actionType){
+			case Send:
+			newOpt.action_type = ActionType.Send;
+			case AskFor:
+			newOpt.action_type = ActionType.AskFor;
+			case Turn:
+			newOpt.action_type = ActionType.Turn;
+		}
+		switch(options.filters){
+			case APP_USERS:
+			newOpt.filters = extension.facebook.html5.Filters.app_user;
+			case APP_NON_USERS:
+			newOpt.filters = extension.facebook.html5.Filters.app_non_user;
+		}
+		trace(newOpt);
+		FacebookJS.ui(newOpt);
 		#end
 	}
 

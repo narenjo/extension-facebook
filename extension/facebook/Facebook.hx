@@ -6,6 +6,8 @@ import extension.facebook.android.FacebookCallbacks;
 import extension.facebook.android.FacebookCFFI;
 #elseif ios
 import extension.facebook.ios.FacebookCFFI;
+#elseif html5
+import extension.facebook.html5.FacebookJS;
 #end
 
 import extension.util.task.*;
@@ -52,6 +54,13 @@ class Facebook extends TaskExecutor {
 			#if (android || ios)
 			this.initCallback = initCallback;
 			FacebookCFFI.init(this.setAuthToken);
+			#elseif html5
+			this.initCallback = initCallback;
+			FacebookJS.getLoginStatus(function(response){
+				if (response.status == Status.CONNECTED) {
+					this.setAuthToken(response.authResponse.accessToken);
+				}
+			});
 			#end
 		}
 	}
@@ -65,7 +74,12 @@ class Facebook extends TaskExecutor {
 			this.initCallback(true);
 		}
 	}
-
+public function getToken():String{
+	#if android
+	return FacebookCFFI.getCurrentAccessToken();
+	#end
+	return "";
+}
 	public function login(
 		type : PermissionsType,
 		permissions : Array<String>,
@@ -94,10 +108,23 @@ class Facebook extends TaskExecutor {
 
 		FacebookCFFI.logInWithReadPermissions(permissions);
 
+		#elseif html5
+		var opts:LoginOptions = {};
+		if(permissions.length > 0){
+			opts.scope = permissions.join(",");
+		}
+		FacebookJS.login(function(response:StatusResponse){
+			if (response.status == Status.CONNECTED) {
+				fonComplete();
+            }
+			else {
+				fOnError("error");
+			}
+		}, opts);
 		#elseif (cpp || neko)
 
 		var appID = Sys.getEnv("FACEBOOK_APP_ID");
-		var redirectUri = "http://vmoura.dojo/ws_face_prueba";
+		var redirectUri = Sys.getEnv("FACEBOOK_REDIRECT_URI");
 		var url = 'https://www.facebook.com/dialog/oauth?client_id=$appID&redirect_uri=$redirectUri';
 
 		Thread.create(function() {
@@ -146,6 +173,8 @@ class Facebook extends TaskExecutor {
 	public function logout() {
 		#if (android || iphone)
 		FacebookCFFI.logout();
+		#elseif html5
+		FacebookJS.logout();
 		#end
 	}
 
@@ -250,7 +279,7 @@ class Facebook extends TaskExecutor {
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.getAsync(
-			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			"https://graph.facebook.com/v3.2"+prependSlash(resource),
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);
