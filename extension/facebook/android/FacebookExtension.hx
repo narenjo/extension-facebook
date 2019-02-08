@@ -153,4 +153,43 @@ class FacebookExtension {
 		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
 	}
 
+	public static function setDebug()
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"setDebug",
+			"()V"
+		);
+		JNI.callStatic(fn, []);
+	}
+
+	public static function logEvent(eventName:String, jsonPayload:String)
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"logEvent",
+			"(Ljava/lang/String;Ljava/lang/String;)V"
+		);
+		JNI.callStatic(fn, [eventName, jsonPayload]);
+	}
+
+	public static function setUserID(userID:String)
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"setUserID",
+			"(Ljava/lang/String;)V"
+		);
+		JNI.callStatic(fn, [userID]);
+	}
+
+	public static function trackPurchase(purchaseAmount:Float, currency:String, ?parameters:String)
+	{
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"trackPurchase",
+			"(FLjava/lang/String;Ljava/lang/String;)V"
+		);
+		JNI.callStatic(fn, [purchaseAmount, currency, parameters]);
+	}
 }

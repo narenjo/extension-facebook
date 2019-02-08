@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import com.facebook.LoggingBehavior;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,6 +46,14 @@ import java.security.NoSuchAlgorithmException;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
 
+import java.math.BigDecimal;
+import java.util.Currency;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Map;
+
 public class FacebookExtension extends Extension {
 
 	static AccessTokenTracker accessTokenTracker;
@@ -51,11 +61,12 @@ public class FacebookExtension extends Extension {
 	static GameRequestDialog requestDialog;
 	static SecureHaxeObject callbacks;
 	static ShareDialog shareDialog;
+	static AppEventsLogger logger;
 	static final String TAG = "FACEBOOK-EXTENSION";
 
 	public FacebookExtension() {
 
-		FacebookSdk.sdkInitialize(mainContext);
+		//FacebookSdk.sdkInitialize(mainContext);
 		requestDialog = new GameRequestDialog(mainActivity);
 		shareDialog = new ShareDialog(mainActivity);
 
@@ -64,7 +75,9 @@ public class FacebookExtension extends Extension {
 		}
 
 		callbackManager = CallbackManager.Factory.create();
-
+		
+		logger = AppEventsLogger.newLogger(mainActivity);
+		
 		LoginManager.getInstance().registerCallback(callbackManager,
 
 			new FacebookCallback<LoginResult>() {
@@ -207,32 +220,41 @@ public class FacebookExtension extends Extension {
 	public static void init(HaxeObject _callbacks) {
 
 		callbacks = new SecureHaxeObject(_callbacks, mainActivity, TAG);
+		
+		try {
+			accessTokenTracker = new AccessTokenTracker() {
+				@Override
+				protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+					if (callbacks!=null) {
+						if (currentAccessToken!=null) {
+							callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+						} else {
+							callbacks.call1("_onTokenChange", "");
+						}
+					}
+				}
+			};
 
-		accessTokenTracker = new AccessTokenTracker() {
-			@Override
-			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-				if (callbacks!=null) {
-					if (currentAccessToken!=null) {
-						callbacks.call1("_onTokenChange", currentAccessToken.getToken());
-					} else {
+			mainActivity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					try 
+					{
+						AccessToken token = AccessToken.getCurrentAccessToken();
+						if (token!=null) {
+							callbacks.call1("_onTokenChange", token.getToken());
+						} else {
+							callbacks.call1("_onTokenChange", "");
+						}
+					} catch (ExceptionInInitializerError error) {
 						callbacks.call1("_onTokenChange", "");
 					}
 				}
-			}
-		};
-
-		mainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            	AccessToken token = AccessToken.getCurrentAccessToken();
-				if (token!=null) {
-					callbacks.call1("_onTokenChange", token.getToken());
-				} else {
-					callbacks.call1("_onTokenChange", "");
-				}
-			}
-		});
-
+			});
+		
+		} catch (ExceptionInInitializerError error) {
+			callbacks.call1("_onTokenChange", "");
+		}
 	}
 
 	public static void logout() {
@@ -417,13 +439,83 @@ public class FacebookExtension extends Extension {
 
 	}
 
+    private static Map<String, String> getPayloadFromJson(String jsonString) {
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        Map<String, String> payload = new Gson().fromJson(jsonString, type);
+        return payload;
+    }
+
+
+    private static Bundle getAnalyticsBundleFromJson(String jsonString) {
+        Map<String, String> payloadMap = getPayloadFromJson(jsonString);
+        Bundle payloadBundle = new Bundle();
+        for (Map.Entry<String, String> entry : payloadMap.entrySet()) {
+            payloadBundle.putString(entry.getKey(), entry.getValue());
+        }
+
+        return payloadBundle;
+    }
+
+    public static void logEvent(String eventName, String jsonPayload)
+    {
+        Log.d(TAG, "log event " + eventName + " with payload: " + jsonPayload);
+
+        Bundle payloadBundle = getAnalyticsBundleFromJson(jsonPayload);
+        logger.logEvent(eventName, payloadBundle);
+    }
+
+    public static void setDebug()
+    {
+        Log.d(TAG, "DEBUG mode used");
+
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+    }
+
+    public static void setUserID(String userID) {
+        Log.d(TAG, "setUserID to: " + userID);
+
+        logger.setUserID(userID);
+        logger.updateUserProperties(
+                new Bundle(),
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (callbacks!=null) {
+                            FacebookRequestError error = response.getError();
+                            GraphRequest req = response.getRequest();
+                            if (error==null) {
+                                Log.d(TAG, "on setUserID success");
+                            } else {
+                                String errorMessage;
+
+                                if (error.getRequestResult() == null) {
+                                    errorMessage = "{}";
+                                } else {
+                                    errorMessage = error.getRequestResult().toString();
+                                }
+                                Log.d(TAG, "on setUserID error: " + errorMessage);
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+	public static void trackPurchase(float purchaseAmount, String currency, String parameters)
+	{
+		// Bundle parameters
+		Bundle bundle = getAnalyticsBundleFromJson(parameters);
+		logger.logPurchase(BigDecimal.valueOf(purchaseAmount), Currency.getInstance(currency), bundle);
+	}
+
 	// !Static methods interface
 
 	@Override public void onCreate (Bundle savedInstanceState) {
 
 		try {
 			PackageInfo info = mainContext.getPackageManager().getPackageInfo(
-				"com.sample.srvtest",
+                mainContext.getPackageName(),
 				PackageManager.GET_SIGNATURES
 			);
 			for (Signature signature : info.signatures) {
@@ -440,7 +532,9 @@ public class FacebookExtension extends Extension {
 	}
 
 	@Override public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
-		callbackManager.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+		if(!callbackManager.onActivityResult(requestCode, resultCode, data))
+			Log.d(TAG, "callbackManager.onActivityResult cannot be handled requestCode: " + requestCode);
 		return true;
 	}
 

@@ -1,6 +1,8 @@
 #import <CallbacksDelegate.h>
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKAppInviteContent.h>
 #import <FBSDKShareKit/FBSDKAppInviteDialog.h>
@@ -47,6 +49,29 @@ namespace extension_facebook {
 
 	}
 
+	void setDebug() {
+		NSLog(@"Facebook: set debug mode");
+		[FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
+	}
+	
+	void logEvent(std::string name, std::string payload) {
+		NSLog(@"Facebook: logEvent name= %s, payload= %s", name.c_str(), payload.c_str());
+		
+        NSString * nsName = [[NSString alloc] initWithUTF8String:name.c_str()];
+        NSString * nsPayload = [[NSString alloc] initWithUTF8String:payload.c_str()];
+		NSData * jsonData = [nsPayload dataUsingEncoding:NSUTF8StringEncoding];
+		NSError * error = nil;
+		NSDictionary * params = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:&error];
+		
+		[FBSDKAppEvents logEvent:nsName parameters:params];
+	}
+	
+	void logPurchase(double value, std::string currency) {
+		//NSLog(@"Facebook: logPurchase value= %@, currency= %@", value, currency);
+        NSString * nsCurrency = [[NSString alloc] initWithUTF8String:currency.c_str()];
+		[FBSDKAppEvents logPurchase:value currency:nsCurrency];
+	}
+	
 	void logOut() {
 		[login logOut];
 	}
@@ -106,7 +131,7 @@ namespace extension_facebook {
 
 		FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
 		content.contentURL = [NSURL URLWithString:[NSString stringWithUTF8String:contentURL.c_str()]];
-		if (contentTitle!="") {
+		/*if (contentTitle!="") {
 			content.contentTitle = [NSString stringWithUTF8String:contentTitle.c_str()];
 		}
 		if (imageURL!="") {
@@ -114,7 +139,7 @@ namespace extension_facebook {
 		}
 		if (contentDescription!="") {
 			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
-		}
+		}*/
 
 		int osVersion = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion;
 		FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];

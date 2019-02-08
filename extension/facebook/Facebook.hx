@@ -361,4 +361,34 @@ class Facebook extends TaskExecutor {
 		#end
 	}
 
+	public function setDebug()
+	{
+		#if (android || ios)
+			FacebookCFFI.setDebug();
+		#end
+	}
+
+	public function logEvent(eventName:String, jsonPayload:String)
+	{
+		#if (android || ios)
+			FacebookCFFI.logEvent(eventName, jsonPayload);
+		#end
+	}
+
+	public function setUserID(userID:String)
+	{
+		#if android
+			FacebookCFFI.setUserID(userID);
+		#end
+	}
+
+	public function trackPurchase(purchaseAmount:Float, currency:String, ?parameters:String)
+	{
+		#if android
+			FacebookCFFI.trackPurchase(purchaseAmount, currency, parameters);
+		#end
+		#if ios
+			FacebookCFFI.logPurchase(purchaseAmount, currency);
+		#end
+	}
 }
