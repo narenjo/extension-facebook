@@ -142,15 +142,30 @@ class FacebookExtension {
 		recipients : Array<String> = null,
 		objectId : String = null,
 		actionType : Int = 0,
+		filters : Int = 0,
 		data : String = null
 	) {
 		var arr = arrToString(recipients);
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
 			"appRequest",
-			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V"
+			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;)V"
 		);
-		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
+		JNI.callStatic(fn, [message, title, arr, objectId, actionType, filters, data]);
 	}
+	public static function getCurrentAccessToken():String{
+		var fn = JNI.createStaticMethod(
+			"com.facebook.AccessToken",
+			"getCurrentAccessToken",
+			"()Lcom/facebook/AccessToken;"
+		);
 
+		var m = JNI.createMemberMethod(
+			"com.facebook.AccessToken",
+			"getToken",
+			"()Ljava/lang/String;"
+		);
+		var token = JNI.callStatic(fn, []);
+		return JNI.callMember(m, token, []);
+	}
 }

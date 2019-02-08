@@ -3,6 +3,7 @@ package org.haxe.extension.facebook;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -19,6 +20,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.GameRequestContent.ActionType;
+import com.facebook.share.model.GameRequestContent.Filters;
 import com.facebook.share.model.GameRequestContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -55,7 +57,7 @@ public class FacebookExtension extends Extension {
 
 	public FacebookExtension() {
 
-		FacebookSdk.sdkInitialize(mainContext);
+		//FacebookSdk.sdkInitialize(mainContext);
 		requestDialog = new GameRequestDialog(mainActivity);
 		shareDialog = new ShareDialog(mainActivity);
 
@@ -316,19 +318,28 @@ public class FacebookExtension extends Extension {
 		String recipients,
 		String objectID,
 		int actionType,
+		int filters,
 		String data
 	) {
 		GameRequestContent.Builder builder = new GameRequestContent.Builder();
 		builder.setMessage(message);
 		builder.setTitle(title);
-		if (recipients!=null && recipients!="") {
+		if (!TextUtils.isEmpty(recipients)) {
 			String[] arr = recipients.split(";");
 			if (arr.length>0) {
 				builder.setTo(arr[0]);
 			}
 		}
-		if (objectID!=null & objectID!="") {
+		if (!TextUtils.isEmpty(objectID)) {
 			builder.setObjectId(objectID);
+		}
+		switch(filters) {
+			case 1:
+				builder.setFilters(Filters.APP_USERS);
+				break;
+			case 2:
+				builder.setFilters(Filters.APP_NON_USERS);
+				break;
 		}
 		switch (actionType) {
 			case 1:
@@ -340,10 +351,8 @@ public class FacebookExtension extends Extension {
 			case 3:
 				builder.setActionType(ActionType.TURN);
 				break;
-			default:
-				builder.setActionType(ActionType.SEND);
 		}
-		if (data!=null && data!="") {
+		if (!TextUtils.isEmpty(data)) {
 			builder.setData(data);
 		}
 		GameRequestContent content = builder.build();

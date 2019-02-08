@@ -5,6 +5,8 @@ import haxe.Json;
 import extension.facebook.android.FacebookCFFI;
 #elseif ios
 import extension.facebook.ios.FacebookCFFI;
+#elseif html5
+import extension.facebook.html5.FacebookJS;
 #end
 
 @:enum
@@ -13,6 +15,11 @@ abstract AppRequestActionType(Int) to Int {
 	var AskFor = 2;
 	var Turn = 3;
 }
+@:enum
+abstract Filters(Int) to Int{
+	var APP_USERS = 1;
+	var APP_NON_USERS = 2;
+}
 
 typedef AppRequest = {
 	@:optional var message : String;
@@ -20,6 +27,7 @@ typedef AppRequest = {
 	@:optional var recipients : Array<String>;
 	@:optional var objectId : String;
 	@:optional var actionType : AppRequestActionType;
+	@:optional var filters : Filters;
 	@:optional var data : String;
 }
 
@@ -61,6 +69,7 @@ class AppRequests {
 			options.recipients,
 			options.objectId,
 			options.actionType,
+			options.filters,
 			options.data
 		);
 		#end
