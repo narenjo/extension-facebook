@@ -38,7 +38,7 @@ extern class FacebookJS {
     */
     public static function login(?callback:StatusResponse->Void, ?options:LoginOptions): Void;
 
-    public static function api(path: String, ?method:String, ?params:Dynamic, ?xcallback:Dynamic->Void):Void;
+    public static function api(path: String, ?method:String, ?params:Dynamic, ?callback:Dynamic->Void):Void;
 
     /**
     * @see https://developers.facebook.com/docs/sharing/reference/share-dialog
@@ -80,7 +80,7 @@ extern typedef LoginOptions = {
 //  RESPONSES
 //
 ////////////////////////
-@:enum extern abstract Status(String) {
+@:enum extern abstract Status(String) from String to String {
 	var CONNECTED = "connected";
     var AUTH_EXPIRED = "authorization_expired";
     var NOT_AUTHORIZED = "not_authorized";

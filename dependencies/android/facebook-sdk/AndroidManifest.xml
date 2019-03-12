@@ -20,7 +20,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.facebook">
+      package="org.haxe.extension.facebook">
 
     <application>
         <meta-data

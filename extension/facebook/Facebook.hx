@@ -8,6 +8,8 @@ import extension.facebook.android.FacebookCFFI;
 import extension.facebook.ios.FacebookCFFI;
 #elseif html5
 import extension.facebook.html5.FacebookJS;
+import js.Browser;
+import haxe.Timer;
 #end
 
 import extension.util.task.*;
@@ -38,6 +40,7 @@ class Facebook extends TaskExecutor {
 
 	private var initCallback:Bool->Void;
 	private static var instance:Facebook=null;
+	private static var firstTime:Bool = true;
 
 	public static function getInstance():Facebook{
 		if(instance==null) instance = new Facebook();
@@ -56,11 +59,22 @@ class Facebook extends TaskExecutor {
 			FacebookCFFI.init(this.setAuthToken);
 			#elseif html5
 			this.initCallback = initCallback;
-			FacebookJS.getLoginStatus(function(response){
-				if (response.status == Status.CONNECTED) {
-					this.setAuthToken(response.authResponse.accessToken);
+			var loadingTimer = new Timer(500);
+			loadingTimer.run = function (){
+				trace(untyped window.fbLoaded);
+				var isLoaded = untyped window.fbLoaded;
+				if(isLoaded) {
+					loadingTimer.stop();
+					FacebookJS.getLoginStatus(function(response){
+						if (response.status == Status.CONNECTED) {
+							this.setAuthToken(response.authResponse.accessToken);
+						}
+						else {
+							this.setAuthToken("");
+						}
+					});
 				}
-			});
+			}
 			#end
 		}
 	}
@@ -70,7 +84,8 @@ class Facebook extends TaskExecutor {
 			initted = true;
 		}
 		this.accessToken = token;
-		if (this.initCallback != null) {
+		if (firstTime && this.initCallback != null) {
+			firstTime = false;
 			this.initCallback(true);
 		}
 	}
@@ -115,10 +130,11 @@ public function getToken():String{
 		}
 		FacebookJS.login(function(response:StatusResponse){
 			if (response.status == Status.CONNECTED) {
+				this.setAuthToken(response.authResponse.accessToken);
 				fonComplete();
             }
 			else {
-				fOnError("error");
+				fOnError(response.status);
 			}
 		}, opts);
 		#elseif (cpp || neko)
@@ -276,6 +292,15 @@ public function getToken():String{
 				} catch(error:String) { trace(error, x); }
 			}
 		);
+		#elseif html5
+		FacebookJS.api(prependSlash(resource), "GET", parameters, function(response:Dynamic){
+			if(response == null || response.error){
+				onError(response);
+			}
+			else {
+				onComplete(response);
+			}
+		});
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.getAsync(
