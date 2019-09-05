@@ -47,6 +47,7 @@ extern class FacebookJS {
      * @see https://developers.facebook.com/docs/games/services/gamerequests
      */
     @:overload(function(params: ShareDialogParams, ?callback:ShareDialogResponse->Void): Void {})
+    @:overload(function(params: FeedDialogParams, ?callback:ShareDialogResponse->Void): Void {})
     public static function ui(params: GameRequestDialogParams, ?callback:GameRequestDialogResponse->Void): Void;
 
     /**
@@ -139,6 +140,11 @@ extern typedef ShareDialogParams = {
     @:optional var hashtag : String;
     @:optional var quote : String;
     @:optional var mobile_iframe : Bool;
+}
+extern typedef FeedDialogParams = {
+    > DialogParams,
+    var method: String;
+    var link : String;
 }
 extern typedef GameRequestDialogParams = {
     > DialogParams,

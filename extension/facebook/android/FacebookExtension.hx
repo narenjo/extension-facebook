@@ -108,9 +108,8 @@ class FacebookExtension {
 	@JNI("org.haxe.extension.facebook", "shareLink")
 	public static function shareLink(
 		contentURL : String,
-		contentTitle : String,
-		imageURL : String,
-		contentDescription : String
+		quote : String,
+		hashtag : String
 	) {}
 
 	static var graphRequestID = 0;

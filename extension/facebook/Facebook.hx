@@ -60,8 +60,10 @@ class Facebook extends TaskExecutor {
 			#elseif html5
 			this.initCallback = initCallback;
 			var loadingTimer = new Timer(500);
+			var maxTries = 10;
+			var tries = 0;
 			loadingTimer.run = function (){
-				trace(untyped window.fbLoaded);
+
 				var isLoaded = untyped window.fbLoaded;
 				if(isLoaded) {
 					loadingTimer.stop();
@@ -74,6 +76,10 @@ class Facebook extends TaskExecutor {
 						}
 					});
 				}
+				if(tries > maxTries){
+					loadingTimer.stop();
+				}
+				tries++;
 			}
 			#end
 		}
