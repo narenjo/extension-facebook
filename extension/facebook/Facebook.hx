@@ -8,7 +8,6 @@ import extension.facebook.android.FacebookCFFI;
 import extension.facebook.ios.FacebookCFFI;
 #elseif html5
 import extension.facebook.html5.FacebookJS;
-import js.Browser;
 import haxe.Timer;
 #end
 
@@ -137,6 +136,11 @@ public function getToken():String{
 		FacebookJS.login(function(response:StatusResponse){
 			if (response.status == Status.CONNECTED) {
 				this.setAuthToken(response.authResponse.accessToken);
+				//Bug facebook logout
+				var cookieName = "fblo_" + untyped window.fbAppId;
+				if(js.Cookie.exists(cookieName)){
+					js.Cookie.remove(cookieName);
+				}
 				fonComplete();
             }
 			else {
