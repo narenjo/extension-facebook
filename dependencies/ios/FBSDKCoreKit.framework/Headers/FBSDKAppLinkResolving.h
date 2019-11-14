@@ -17,31 +17,38 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIImage.h>
 
-@class FBSDKGraphRequestDataAttachment;
-@class FBSDKLogger;
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGraphRequestBody : NSObject
+@class FBSDKAppLink;
 
-@property (nonatomic, retain, readonly) NSData *data;
+/**
+ Describes the callback for appLinkFromURLInBackground.
+ @param appLink the FBSDKAppLink representing the deferred App Link
+ @param error the error during the request, if any
 
-- (void)appendWithKey:(NSString *)key
-            formValue:(NSString *)value
-               logger:(FBSDKLogger *)logger;
+ */
+typedef void (^FBSDKAppLinkBlock)(FBSDKAppLink * _Nullable appLink, NSError * _Nullable error)
+NS_SWIFT_NAME(AppLinkBlock);
 
-- (void)appendWithKey:(NSString *)key
-           imageValue:(UIImage *)image
-               logger:(FBSDKLogger *)logger;
 
-- (void)appendWithKey:(NSString *)key
-            dataValue:(NSData *)data
-               logger:(FBSDKLogger *)logger;
+/**
+ Implement this protocol to provide an alternate strategy for resolving
+ App Links that may include pre-fetching, caching, or querying for App Link
+ data from an index provided by a service provider.
+ */
+NS_SWIFT_NAME(AppLinkResolving)
+@protocol FBSDKAppLinkResolving <NSObject>
 
-- (void)appendWithKey:(NSString *)key
-  dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)dataAttachment
-               logger:(FBSDKLogger *)logger;
+/**
+ Asynchronously resolves App Link data for a given URL.
 
-+ (NSString *)mimeContentType;
+ @param url The URL to resolve into an App Link.
+ @param handler The completion block that will return an App Link for the given URL.
+ */
+- (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler
+NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 
 @end
+
+NS_ASSUME_NONNULL_END

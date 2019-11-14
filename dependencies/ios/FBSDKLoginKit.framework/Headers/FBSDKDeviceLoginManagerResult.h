@@ -18,22 +18,34 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef __cplusplus
-#define FBSDK_EXTERN extern "C" __attribute__((visibility ("default")))
-#else
-#define FBSDK_EXTERN extern __attribute__((visibility ("default")))
-#endif
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
 
-#define FBSDK_STATIC_INLINE static inline
+NS_ASSUME_NONNULL_BEGIN
 
-#define FBSDK_NO_DESIGNATED_INITIALIZER() \
-@throw [NSException exceptionWithName:NSInvalidArgumentException \
-                               reason:[NSString stringWithFormat:@"unrecognized selector sent to instance %p", self] \
-                             userInfo:nil]
+/*!
+ @abstract Represents the results of the a device login flow.
+ @discussion This is used by `FBSDKDeviceLoginManager`.
+ */
+NS_SWIFT_NAME(DeviceLoginManagerResult)
+@interface FBSDKDeviceLoginManagerResult : NSObject
 
-#define FBSDK_NOT_DESIGNATED_INITIALIZER(DESIGNATED_INITIALIZER) \
-@throw [NSException exceptionWithName:NSInvalidArgumentException \
-                               reason:[NSString stringWithFormat:@"Please use the designated initializer [%p %@]", \
-                                       self, \
-                                       NSStringFromSelector(@selector(DESIGNATED_INITIALIZER))] \
-                             userInfo:nil]
+/*!
+ @abstract There is no public initializer.
+ */
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/*!
+ @abstract The token.
+ */
+@property (nullable, nonatomic, strong, readonly) FBSDKAccessToken *accessToken;
+
+/*!
+ @abstract Indicates if the login was cancelled by the user, or if the device
+  login code has expired.
+ */
+@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
+
+@end
+
+NS_ASSUME_NONNULL_END

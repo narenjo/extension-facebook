@@ -21,29 +21,35 @@
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
-/*!
- @abstract A model for Open Graph content to be shared.
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+  A model for Open Graph content to be shared.
  */
+NS_SWIFT_NAME(ShareOpenGraphContent)
+DEPRECATED_MSG_ATTRIBUTE("Open Graph no longer available; use FBSDKShareLinkContent instead.")
 @interface FBSDKShareOpenGraphContent : NSObject <FBSDKSharingContent>
 
-/*!
- @abstract Open Graph Action to be shared.
+/**
+  Open Graph Action to be shared.
  @return The action
  */
 @property (nonatomic, copy) FBSDKShareOpenGraphAction *action;
 
-/*!
- @abstract Property name that points to the primary Open Graph Object in the action.
- @discussion The value that this action points to will be use for rendering the preview for the share.
- @return The property name for the Open Graph Object in the action
+/**
+  Property name that points to the primary Open Graph Object in the action.
+
+ The value that this action points to will be use for rendering the preview for the share.
  */
 @property (nonatomic, copy) NSString *previewPropertyName;
 
-/*!
- @abstract Compares the receiver to another Open Graph content.
+/**
+  Compares the receiver to another Open Graph content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO
  */
 - (BOOL)isEqualToShareOpenGraphContent:(FBSDKShareOpenGraphContent *)content;
 
 @end
+
+NS_ASSUME_NONNULL_END

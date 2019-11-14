@@ -18,23 +18,24 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKCopying.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
 
-// Internal only class to facilitate FBSDKGraphRequest processing, specifically
-// associating FBSDKGraphRequest and FBSDKGraphRequestHandler instances and necessary
-// data for retry processing.
-@interface FBSDKGraphRequestMetadata : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, retain) FBSDKGraphRequest *request;
-@property (nonatomic, copy) FBSDKGraphRequestHandler completionHandler;
-@property (nonatomic, copy) NSDictionary *batchParameters;
+/**
+ A base interface for Messenger share action buttons.
+ */
+DEPRECATED_FOR_MESSENGER
+NS_SWIFT_NAME(ShareMessengerActionButton)
+@protocol FBSDKShareMessengerActionButton <FBSDKCopying, NSSecureCoding>
 
-- (instancetype)initWithRequest:(FBSDKGraphRequest *)request
-              completionHandler:(FBSDKGraphRequestHandler)handler
-                batchParameters:(NSDictionary *)batchParameters
-NS_DESIGNATED_INITIALIZER;
+/**
+ The title displayed to the user for the button.
+ @return The title for the button.
+ */
+@property (nonatomic, copy) NSString *title;
 
-- (void)invokeCompletionHandlerForConnection:(FBSDKGraphRequestConnection *)connection
-                                 withResults:(id)results
-                                       error:(NSError *)error;
 @end
+
+NS_ASSUME_NONNULL_END

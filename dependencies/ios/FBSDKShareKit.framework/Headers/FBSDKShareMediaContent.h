@@ -16,24 +16,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@protocol FBSDKWebDialogViewDelegate;
+#import <FBSDKShareKit/FBSDKSharingContent.h>
 
-@interface FBSDKWebDialogView : UIView
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, assign) id<FBSDKWebDialogViewDelegate> delegate;
+/**
+ A protocol for media content (photo or video) to be shared.
+ */
+NS_SWIFT_NAME(ShareMedia)
+@protocol FBSDKShareMedia <NSObject>
 
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
+@end
+
+/**
+  A model for media content (photo or video) to be shared.
+ */
+NS_SWIFT_NAME(ShareMediaContent)
+@interface FBSDKShareMediaContent : NSObject <FBSDKSharingContent>
+
+/**
+  Media to be shared.
+ @return Array of the media (FBSDKSharePhoto or FBSDKShareVideo)
+ */
+@property (nonatomic, copy) NSArray<id<FBSDKShareMedia>> *media;
+
+/**
+  Compares the receiver to another media content.
+ @param content The other content
+ @return YES if the receiver's values are equal to the other content's values; otherwise NO
+ */
+- (BOOL)isEqualToShareMediaContent:(FBSDKShareMediaContent *)content;
 
 @end
 
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
-
-@end
+NS_ASSUME_NONNULL_END

@@ -20,37 +20,29 @@
 
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
-/*!
- @abstract A model for status and link content to be shared.
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+  A model for status and link content to be shared.
  */
+NS_SWIFT_NAME(ShareLinkContent)
 @interface FBSDKShareLinkContent : NSObject <FBSDKSharingContent>
 
-/*!
- @abstract The description of the link.
- @discussion If not specified, this field is automatically populated by information scraped from the contentURL,
- typically the title of the page.  This value may be discarded for specially handled links (ex: iTunes URLs).
- @return The description of the link
- */
-@property (nonatomic, copy) NSString *contentDescription;
+/**
+  Some quote text of the link.
 
-/*!
- @abstract The title to display for this link.
- @discussion This value may be discarded for specially handled links (ex: iTunes URLs).
- @return The link title
+ If specified, the quote text will render with custom styling on top of the link.
+ @return The quote text of a link
  */
-@property (nonatomic, copy) NSString *contentTitle;
+@property (nonatomic, copy, nullable) NSString *quote;
 
-/*!
- @abstract The URL of a picture to attach to this content.
- @return The network URL of an image
- */
-@property (nonatomic, copy) NSURL *imageURL;
-
-/*!
- @abstract Compares the receiver to another link content.
+/**
+  Compares the receiver to another link content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO
  */
 - (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content;
 
 @end
+
+NS_ASSUME_NONNULL_END

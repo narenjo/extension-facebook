@@ -12,10 +12,12 @@
 
 #import <Bolts/BFCancellationTokenRegistration.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  A block that will be called when a token is cancelled.
  */
-typedef void(^BFCancellationBlock)();
+typedef void(^BFCancellationBlock)(void);
 
 /*!
  The consumer view of a CancellationToken.
@@ -36,3 +38,5 @@ typedef void(^BFCancellationBlock)();
 - (BFCancellationTokenRegistration *)registerCancellationObserverWithBlock:(BFCancellationBlock)block;
 
 @end
+
+NS_ASSUME_NONNULL_END

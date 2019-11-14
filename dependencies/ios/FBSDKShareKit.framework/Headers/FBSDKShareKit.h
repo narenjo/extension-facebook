@@ -18,24 +18,17 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKAppGroupAddDialog.h>
-#import <FBSDKShareKit/FBSDKAppGroupContent.h>
-#import <FBSDKShareKit/FBSDKAppGroupJoinDialog.h>
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
-#import <FBSDKShareKit/FBSDKAppInviteDialog.h>
-#import <FBSDKShareKit/FBSDKGameRequestContent.h>
-#import <FBSDKShareKit/FBSDKGameRequestDialog.h>
-#import <FBSDKShareKit/FBSDKLikeButton.h>
-#import <FBSDKShareKit/FBSDKLikeControl.h>
-#import <FBSDKShareKit/FBSDKLikeObjectType.h>
-#import <FBSDKShareKit/FBSDKMessageDialog.h>
-#import <FBSDKShareKit/FBSDKSendButton.h>
+#import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareAPI.h>
-#import <FBSDKShareKit/FBSDKShareButton.h>
 #import <FBSDKShareKit/FBSDKShareConstants.h>
-#import <FBSDKShareKit/FBSDKShareDialog.h>
-#import <FBSDKShareKit/FBSDKShareDialogMode.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import <FBSDKShareKit/FBSDKShareMediaContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerActionButton.h>
+#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateElement.h>
+#import <FBSDKShareKit/FBSDKShareMessengerMediaTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerOpenGraphMusicTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerURLActionButton.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
@@ -45,3 +38,21 @@
 #import <FBSDKShareKit/FBSDKShareVideoContent.h>
 #import <FBSDKShareKit/FBSDKSharing.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+
+#if !TARGET_OS_TV
+#import <FBSDKShareKit/FBSDKAppGroupContent.h>
+#import <FBSDKShareKit/FBSDKAppInviteContent.h>
+#import <FBSDKShareKit/FBSDKGameRequestContent.h>
+#import <FBSDKShareKit/FBSDKGameRequestDialog.h>
+#import <FBSDKShareKit/FBSDKLiking.h>
+#import <FBSDKShareKit/FBSDKLikeObjectType.h>
+#import <FBSDKShareKit/FBSDKMessageDialog.h>
+#import <FBSDKShareKit/FBSDKShareButton.h>
+#import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
+#import <FBSDKShareKit/FBSDKShareDialog.h>
+#import <FBSDKShareKit/FBSDKShareDialogMode.h>
+#import <FBSDKShareKit/FBSDKSendButton.h>
+#else
+#import <FBSDKShareKit/FBSDKDeviceShareViewController.h>
+#import <FBSDKShareKit/FBSDKDeviceShareButton.h>
+#endif

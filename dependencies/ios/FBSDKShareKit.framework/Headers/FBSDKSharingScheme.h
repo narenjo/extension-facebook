@@ -16,27 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "FBSDKShareDialogMode.h"
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import <FBSDKShareKit/FBSDKLikeObjectType.h>
-#import <FBSDKShareKit/FBSDKLiking.h>
-
-/*!
- @abstract A button to like an object.
- @discussion Tapping the receiver will invoke an API call to the Facebook app through a fast-app-switch that allows
- the object to be liked.  Upon return to the calling app, the view will update with the new state.  If the
- currentAccessToken has "publish_actions" permission and the object is an Open Graph object, then the like can happen
- seamlessly without the fast-app-switch.
+/**
+ A base interface for indicating a custom URL scheme
  */
-@interface FBSDKLikeButton : FBSDKButton <FBSDKLiking>
+NS_SWIFT_NAME(SharingScheme)
+@protocol FBSDKSharingScheme
 
-/*!
- @abstract If YES, a sound is played when the receiver is toggled.
-
- @default YES
+/**
+ Asks the receiver to provide a custom scheme.
+ @param mode The intended dialog mode for sharing the content.
+ @return A custom URL scheme to use for the specified mode, or nil.
  */
-@property (nonatomic, assign, getter = isSoundEnabled) BOOL soundEnabled;
+- (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode;
 
 @end
+
+NS_ASSUME_NONNULL_END

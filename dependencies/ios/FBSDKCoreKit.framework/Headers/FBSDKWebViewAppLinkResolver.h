@@ -16,10 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPIProtocol.h"
+#import "FBSDKAppLinkResolving.h"
 
-@interface FBSDKBridgeAPIProtocolWebV1 : NSObject <FBSDKBridgeAPIProtocol>
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ A reference implementation for an App Link resolver that uses a hidden WKWebView
+ to parse the HTML containing App Link metadata.
+ */
+NS_SWIFT_NAME(WebViewAppLinkResolver)
+@interface FBSDKWebViewAppLinkResolver : NSObject <FBSDKAppLinkResolving>
+
+/**
+ Gets the instance of a FBSDKWebViewAppLinkResolver.
+ */
+@property (class, nonatomic, readonly, strong) FBSDKWebViewAppLinkResolver *sharedInstance
+NS_SWIFT_NAME(shared);
 
 @end
+
+NS_ASSUME_NONNULL_END

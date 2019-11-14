@@ -18,27 +18,46 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import "FBSDKBridgeAPIProtocolType.h"
+/*!
+ @abstract Describes the initial response when starting the device login flow.
+ @discussion This is used by `FBSDKDeviceLoginManager`.
+ */
+NS_SWIFT_NAME(DeviceLoginCodeInfo)
+@interface FBSDKDeviceLoginCodeInfo : NSObject
 
-@class FBSDKBridgeAPIRequest;
+/*!
+ @abstract There is no public initializer.
+ */
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
-FBSDK_EXTERN NSString *const FBSDKBridgeAPIAppIDKey;
-FBSDK_EXTERN NSString *const FBSDKBridgeAPISchemeSuffixKey;
-FBSDK_EXTERN NSString *const FBSDKBridgeAPIVersionKey;
+/*!
+ @abstract the unique id for this login flow.
+*/
+@property (nonatomic, copy, readonly) NSString *identifier;
 
-@protocol FBSDKBridgeAPIProtocol <NSObject>
+/*!
+ @abstract the short "user_code" that should be presented to the user.
+*/
+@property (nonatomic, copy, readonly) NSString *loginCode;
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
-                            error:(NSError *__autoreleasing *)errorRef;
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef;
+/*!
+ @abstract the verification URL.
+*/
+@property (nonatomic, copy, readonly) NSURL *verificationURL;
+
+/*!
+ @abstract the expiration date.
+*/
+@property (nonatomic, copy, readonly) NSDate *expirationDate;
+
+/*!
+ @abstract the polling interval
+*/
+@property (nonatomic, assign, readonly) NSUInteger pollingInterval;
 
 @end
+
+NS_ASSUME_NONNULL_END

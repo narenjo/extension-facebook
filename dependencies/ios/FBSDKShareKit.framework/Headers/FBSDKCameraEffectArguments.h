@@ -18,34 +18,47 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKURLConnection;
+#import <FBSDKCoreKit/FBSDKCopying.h>
 
-typedef void (^FBSDKURLConnectionHandler)(FBSDKURLConnection *connection,
-                                          NSError *error,
-                                          NSURLResponse *response,
-                                          NSData *responseData);
+NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKURLConnectionDelegate <NSObject>
+/**
+ * A container of arguments for a camera effect.
+ * An argument is a NSString identified by a NSString key.
+ */
+NS_SWIFT_NAME(CameraEffectArguments)
+@interface FBSDKCameraEffectArguments : NSObject <FBSDKCopying, NSSecureCoding>
 
-@optional
+/**
+ Sets a string argument in the container.
+ @param string The argument
+ @param key The key for the argument
+ */
+- (void)setString:(nullable NSString *)string forKey:(NSString *)key
+NS_SWIFT_NAME(set(_:forKey:));
 
-- (void)facebookURLConnection:(FBSDKURLConnection *)connection
-              didSendBodyData:(NSInteger)bytesWritten
-            totalBytesWritten:(NSInteger)totalBytesWritten
-    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+/**
+ Gets a string argument from the container.
+ @param key The key for the argument
+ @return The string value or nil
+ */
+- (nullable NSString *)stringForKey:(NSString *)key;
+
+/**
+ Sets a string array argument in the container.
+ @param array The array argument
+ @param key The key for the argument
+ */
+- (void)setArray:(nullable NSArray<NSString *> *)array forKey:(NSString *)key
+NS_SWIFT_NAME(set(_:forKey:));
+
+/**
+ Gets an array argument from the container.
+ @param key The key for the argument
+ @return The array argument
+ */
+- (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key;
 
 @end
 
-@interface FBSDKURLConnection : NSObject
-
-- (FBSDKURLConnection *)initWithRequest:(NSURLRequest *)request
-                      completionHandler:(FBSDKURLConnectionHandler)handler
-NS_DESIGNATED_INITIALIZER;
-
-@property (nonatomic, assign) id<FBSDKURLConnectionDelegate> delegate;
-
-- (void)cancel;
-- (void)start;
-- (void)setDelegateQueue:(NSOperationQueue *)queue;
-
-@end
+NS_ASSUME_NONNULL_END
