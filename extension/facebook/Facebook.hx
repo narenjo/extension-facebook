@@ -249,7 +249,7 @@ public function getToken():String{
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.deleteAsync(
-			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			"https://graph.facebook.com/v4.0"+prependSlash(resource),
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);
@@ -284,7 +284,23 @@ public function getToken():String{
 			onError = function(s) {};
 		}
 		parameters.set("redirect", "false");
-		#if android
+		#if ios
+		FacebookCFFI.setOnGraphRequestComplete(function (str) {
+			onComplete(Json.parse(str));
+		});
+		FacebookCFFI.setOnGraphRequestFail(onError);
+
+		var aParameters = [
+			for(key in parameters.keys()){
+				key + "||" + parameters.get(key);
+			}
+		];
+		FacebookCFFI.graphRequest(
+			prependSlash(resource),
+			aParameters,
+			"GET"
+		);
+		#elseif android
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
 			parameters,
@@ -314,7 +330,7 @@ public function getToken():String{
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.getAsync(
-			"https://graph.facebook.com/v3.2"+prependSlash(resource),
+			"https://graph.facebook.com/v4.0"+prependSlash(resource),
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);
@@ -407,7 +423,7 @@ public function getToken():String{
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.postAsync(
-			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			"https://graph.facebook.com/v4.0"+prependSlash(resource),
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);

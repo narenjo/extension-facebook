@@ -11,15 +11,22 @@ namespace extension_facebook {
 	void logOut();
 
 	void logInWithPublishPermissions(std::vector<std::string> &permissions);
+	__attribute((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
 	void logInWithReadPermissions(std::vector<std::string> &permissions);
-
-	void appInvite(std::string appLinkUrl, std::string previewImageUrl);
+	__attribute((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
+	void logInWithPermissions(std::vector<std::string> &permissions);
 
 	void shareLink(
 		std::string contentURL,
 		std::string contentTitle,
 		std::string imageURL,
 		std::string contentDescription
+	);
+
+	void graphRequest(
+		std::string graphPath,
+		std::vector<std::string> &parameters,
+		std::string methodStr
 	);
 
 	void appRequest(
@@ -37,8 +44,8 @@ namespace extension_facebook {
 	void onLoginCancelCallback();
 	void onLoginErrorCallback(const char *error);
 
-	void onAppInviteComplete(const char *json);
-	void onAppInviteFail(const char *error);
+	void onGraphRequestComplete(const char *json);
+	void onGraphRequestFail(const char *error);
 
 	void onAppRequestComplete(const char *json);
 	void onAppRequestFail(const char *error);

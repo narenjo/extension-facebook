@@ -1,3 +1,5 @@
+**/.DS_Store
+.vscode
 test/test1/Export
 test/test2/Export
 *.class

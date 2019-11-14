@@ -61,8 +61,14 @@ typedef FBObject = {
 
 class AppRequests {
 
-	public static function sendObject(options : AppRequest) {
+	public static function sendObject(options : AppRequest, ?onAppRequestComplete : AppRequestResponse->Void = null, ?onAppRequestFail : String->Void) {
 		#if (android || ios)
+		if(onAppRequestComplete != null){
+			setOnSendObjectCompleted(onAppRequestComplete);
+		}
+		if(onAppRequestFail != null){
+			setOnSendObjectFailed(onAppRequestFail);
+		}
 		FacebookCFFI.appRequest(
 			options.message,
 			options.title,
@@ -74,7 +80,7 @@ class AppRequests {
 		);
 		#elseif html5
 		var newOpt:GameRequestDialogParams = {
-			method: "apprequest",
+			method: "apprequests",
 			message: options.message,
 		};
 		if(options.title != null){
@@ -104,7 +110,15 @@ class AppRequests {
 			newOpt.filters = extension.facebook.html5.Filters.app_non_user;
 		}
 		trace(newOpt);
-		FacebookJS.ui(newOpt);
+		FacebookJS.ui(newOpt, function (response:GameRequestDialogResponse) {
+			trace(response);
+			if (response.request != null && response.to != null && onAppRequestComplete != null) {
+				onAppRequestComplete({id: response.request, to: response.to});
+            }
+			else if(onAppRequestFail != null) {
+				onAppRequestFail(response.error_message);
+			}
+		});
 		#end
 	}
 

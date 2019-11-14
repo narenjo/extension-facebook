@@ -2,8 +2,6 @@
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
-#import <FBSDKShareKit/FBSDKAppInviteDialog.h>
 #import <FBSDKShareKit/FBSDKGameRequestContent.h>
 #import <FBSDKShareKit/FBSDKGameRequestDialog.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
@@ -50,29 +48,21 @@ namespace extension_facebook {
 	void logOut() {
 		[login logOut];
 	}
-
+	
 	void logInWithPublishPermissions(std::vector<std::string> &permissions) {
-		NSMutableArray *nsPermissions = [[NSMutableArray alloc] init];
-		for (auto p : permissions) {
-			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
-		}
-		[login logInWithPublishPermissions:nsPermissions fromViewController:root handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-			if (error) {
-				onLoginErrorCallback([error.localizedDescription UTF8String]);
-			} else if (result.isCancelled) {
-				onLoginCancelCallback();
-			} else {
-				onLoginSuccessCallback();
-			}
-		}];
+		logInWithPermissions(permissions);
 	}
 
 	void logInWithReadPermissions(std::vector<std::string> &permissions) {
+		logInWithPermissions(permissions);
+	}
+
+	void logInWithPermissions(std::vector<std::string> &permissions) {
 		NSMutableArray *nsPermissions = [[NSMutableArray alloc] init];
 		for (auto p : permissions) {
 			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
 		}
-		[login logInWithReadPermissions:nsPermissions fromViewController:root handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+		[login logInWithPermissions:nsPermissions fromViewController:root handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 			if (error) {
 				onLoginErrorCallback([error.localizedDescription UTF8String]);
 			} else if (result.isCancelled) {
@@ -81,21 +71,6 @@ namespace extension_facebook {
 				onLoginSuccessCallback();
 			}
 		}];
-	}
-
-	void appInvite(std::string appLinkUrl, std::string previewImageUrl) {
-
-		FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
-		content.appLinkURL = [NSURL URLWithString:[NSString stringWithUTF8String:appLinkUrl.c_str()]];
-		if (previewImageUrl!="") {
-			content.appInvitePreviewImageURL = [NSURL URLWithString:[NSString stringWithUTF8String:previewImageUrl.c_str()]];
-		}
-
-		FBSDKAppInviteDialog *dialog = [[FBSDKAppInviteDialog alloc] init];
-		dialog.content = content;
-		dialog.delegate = callbacks;
-		[dialog show];
-
 	}
 
 	void shareLink(
@@ -107,13 +82,13 @@ namespace extension_facebook {
 		FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
 		content.contentURL = [NSURL URLWithString:[NSString stringWithUTF8String:contentURL.c_str()]];
 		if (contentTitle!="") {
-			content.contentTitle = [NSString stringWithUTF8String:contentTitle.c_str()];
+			//content.contentTitle = [NSString stringWithUTF8String:contentTitle.c_str()];
 		}
 		if (imageURL!="") {
-			content.imageURL = [NSURL URLWithString:[NSString stringWithUTF8String:imageURL.c_str()]];
+			//content.imageURL = [NSURL URLWithString:[NSString stringWithUTF8String:imageURL.c_str()]];
 		}
 		if (contentDescription!="") {
-			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
+			//content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
 		}
 
 		int osVersion = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion;
@@ -126,6 +101,33 @@ namespace extension_facebook {
 		}
 		[dialog show];
 
+	}
+
+	void graphRequest(
+		std::string graphPath,
+		std::vector<std::string> &parameters,
+		std::string methodStr) {
+
+		NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+		for (auto p : parameters) {
+			[params setValue:[[[NSString stringWithUTF8String:p.c_str()] componentsSeparatedByString:@"||"] objectAtIndex:0] forKey:[[[NSString stringWithUTF8String:p.c_str()] componentsSeparatedByString:@"||"] objectAtIndex:1]];
+		}
+
+		FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+			initWithGraphPath:[NSString stringWithUTF8String:graphPath.c_str()]
+				parameters:params
+				HTTPMethod:[NSString stringWithUTF8String:methodStr.c_str()]];
+		[request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+			if (error) {
+				//NSLog(@"%s",[error.localizedDescription UTF8String]);
+				onGraphRequestFail([error.localizedDescription UTF8String]);
+			} else {
+				NSData *jsonData = [NSJSONSerialization dataWithJSONObject:result
+											options:0
+											error:&error];
+				onGraphRequestComplete([[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String]);
+			}
+		}];
 	}
 
 	void appRequest(
