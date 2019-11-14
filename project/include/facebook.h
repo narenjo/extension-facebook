@@ -11,16 +11,15 @@ namespace extension_facebook {
 	void logOut();
 
 	void logInWithPublishPermissions(std::vector<std::string> &permissions);
-	__attribute((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
+	__attribute__((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
 	void logInWithReadPermissions(std::vector<std::string> &permissions);
-	__attribute((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
+	__attribute__((deprecated("Use logInWithPermissions(std::vector<std::string> &permissions)")));
 	void logInWithPermissions(std::vector<std::string> &permissions);
 
 	void shareLink(
 		std::string contentURL,
-		std::string contentTitle,
-		std::string imageURL,
-		std::string contentDescription
+		std::string quote,
+		std::string hashtag
 	);
 
 	void graphRequest(

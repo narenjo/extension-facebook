@@ -169,21 +169,19 @@ DEFINE_PRIM(extension_facebook_setOnShareFail, 1);
 
 static value extension_facebook_shareLink(
 	value contentURL,
-	value contentTitle,
-	value imageURL,
-	value contentDescription) {
+	value quote,
+	value hashtag) {
 
 	extension_facebook::shareLink(
 		safe_val_string(contentURL),
-		safe_val_string(contentTitle),
-		safe_val_string(imageURL),
-		safe_val_string(contentDescription)
+		safe_val_string(quote),
+		safe_val_string(hashtag)
 	);
 
 	return alloc_null();
 
 }
-DEFINE_PRIM(extension_facebook_shareLink, 4);
+DEFINE_PRIM(extension_facebook_shareLink, 3);
 
 static value extension_facebook_graphRequest(value graphPath, value parameters, value methodStr) {
 

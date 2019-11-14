@@ -10,9 +10,6 @@ class FacebookCallbacks extends TaskExecutor {
 	public var onLoginCancel : Void->Void;
 	public var onLoginError : String->Void;
 
-	public var onAppInviteComplete : String->Void;
-	public var onAppInviteFail : String->Void;
-
 	public var onAppRequestComplete : String->Void;
 	public var onAppRequestFail : String->Void;
 
@@ -47,19 +44,6 @@ class FacebookCallbacks extends TaskExecutor {
 	function _onLoginError(str : String) {
 		if (onLoginError!=null) {
 			addTask(new CallStrTask(onLoginError, str));
-		}
-	}
-
-	// App invite
-	function _onAppInviteComplete(str : String) {
-		if (onAppInviteComplete!=null) {
-			addTask(new CallStrTask(onAppInviteComplete, str));
-		}
-	}
-
-	function _onAppInviteFail(str : String) {
-		if (onAppInviteFail!=null) {
-			addTask(new CallStrTask(onAppInviteFail, str));
 		}
 	}
 

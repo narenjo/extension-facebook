@@ -18,7 +18,7 @@ class Share {
 		#if (android || ios)
 		FacebookCFFI.shareLink(contentURL, quote, hashtag);
 		#elseif html5
-		var share:ShareDialogParams = {method: "share_open_graph", href: contentURL};
+		var share:ShareDialogParams = {method: "share", href: contentURL};
 		if(hashtag != ""){
 			share.hashtag = hashtag;
 		}

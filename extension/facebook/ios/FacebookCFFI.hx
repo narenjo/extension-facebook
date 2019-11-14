@@ -64,9 +64,8 @@ class FacebookCFFI {
 
 	@CPP public static function shareLink(
 		contentURL : String,
-		contentTitle : String,
-		imageURL : String,
-		contentDescription : String
+		quote : String,
+		hashtag : String
 	) {}
 
 

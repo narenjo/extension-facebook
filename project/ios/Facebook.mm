@@ -75,20 +75,16 @@ namespace extension_facebook {
 
 	void shareLink(
 		std::string contentURL,
-		std::string contentTitle,
-		std::string imageURL,
-		std::string contentDescription) {
+		std::string quote,
+		std::string hashtag) {
 
 		FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
 		content.contentURL = [NSURL URLWithString:[NSString stringWithUTF8String:contentURL.c_str()]];
-		if (contentTitle!="") {
-			//content.contentTitle = [NSString stringWithUTF8String:contentTitle.c_str()];
+		if (quote!="") {
+			content.quote = [NSString stringWithUTF8String:quote.c_str()];
 		}
-		if (imageURL!="") {
-			//content.imageURL = [NSURL URLWithString:[NSString stringWithUTF8String:imageURL.c_str()]];
-		}
-		if (contentDescription!="") {
-			//content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
+		if (hashtag!="") {
+			content.hashtag = [FBSDKHashtag hashtagWithString:[NSString stringWithUTF8String:hashtag.c_str()]];
 		}
 
 		int osVersion = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion;

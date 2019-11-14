@@ -22,6 +22,7 @@ import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.GameRequestContent.ActionType;
 import com.facebook.share.model.GameRequestContent.Filters;
 import com.facebook.share.model.GameRequestContent;
+import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.GameRequestDialog.Result;
@@ -45,6 +46,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
+
+import bolts.AppLinks;
 
 public class FacebookExtension extends Extension {
 
@@ -294,18 +297,16 @@ public class FacebookExtension extends Extension {
 		}
 	}
 
-	public static void shareLink(String contentURL, String contentTitle, String imageURL, String contentDescription) {
+	public static void shareLink(String contentURL, String quote, String hashtag) {
 		ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
 		builder.setContentUrl(Uri.parse(contentURL));
-		if (contentTitle!="") {
-			builder.setContentTitle(contentTitle);
+		if (quote!="") {
+			builder.setQuote(quote);
 		}
-		if (imageURL!="") {
-			builder.setImageUrl(Uri.parse(imageURL));
+		if (hashtag!="") {
+			builder.setShareHashtag(new ShareHashtag.Builder().setHashtag(hashtag).build());
 		}
-		if (contentDescription!="") {
-			builder.setContentDescription(contentDescription);
-		}
+
 		ShareLinkContent content = builder.build();
 		if (shareDialog!=null) {
 			shareDialog.show(content);
