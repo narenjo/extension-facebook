@@ -15,7 +15,7 @@
 		<dependency path="dependencies/ios/FBSDKCoreKit.framework" />
 		<dependency path="dependencies/ios/FBSDKLoginKit.framework" />
 		<dependency path="dependencies/ios/FBSDKShareKit.framework" />
-		<template path="template/PROJ-Info.plist" rename="${APP_TITLE}-Info.plist" />
+		<template path="templates" />
 	</section>
 
 	<section if="html5">
