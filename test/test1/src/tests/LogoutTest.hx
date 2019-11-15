@@ -1,6 +1,5 @@
 package tests;
 
-import extension.facebook.AppInvite;
 import extension.facebook.AppRequests;
 import extension.facebook.Facebook;
 import extension.facebook.FriendList;

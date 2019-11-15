@@ -18,13 +18,11 @@ import com.facebook.HttpMethod;
 import com.facebook.internal.BundleJSONConverter;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.GameRequestContent.ActionType;
 import com.facebook.share.model.GameRequestContent.Filters;
 import com.facebook.share.model.GameRequestContent;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.GameRequestDialog.Result;
 import com.facebook.share.widget.GameRequestDialog;
 import com.facebook.share.widget.ShareDialog;
@@ -60,7 +58,6 @@ public class FacebookExtension extends Extension {
 
 	public FacebookExtension() {
 
-		//FacebookSdk.sdkInitialize(mainContext);
 		requestDialog = new GameRequestDialog(mainActivity);
 		shareDialog = new ShareDialog(mainActivity);
 
@@ -252,49 +249,6 @@ public class FacebookExtension extends Extension {
 	public static void logInWithReadPermissions(String permissions) {
 		String[] arr = permissions.split(";");
 		LoginManager.getInstance().logInWithReadPermissions(mainActivity, Arrays.asList(arr));
-	}
-
-	public static void appInvite(String applinkUrl, String previewImageUrl) {
-		if (AppInviteDialog.canShow()) {
-			AppInviteContent content = new AppInviteContent.Builder()
-					.setApplinkUrl(applinkUrl)
-					.setPreviewImageUrl(previewImageUrl)
-					.build();
-			AppInviteDialog appInviteDialog = new AppInviteDialog(mainActivity);
-			appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
-				@Override
-				public void onSuccess(AppInviteDialog.Result result) {
-					if (callbacks!=null) {
-						Bundle bundle = result.getData();
-						JSONObject json = new JSONObject();
-						Set<String> keys = bundle.keySet();
-						for (String key : keys) {
-							try {
-								json.put(key, wrap(bundle.get(key)));
-							} catch (JSONException e) {
-								Log.d(TAG, "JSONException: " + e.toString());
-							}
-						}
-						callbacks.call1("_onAppInviteComplete", json.toString());
-					}
-				}
-
-				@Override
-				public void onCancel() {
-					if (callbacks!=null) {
-						callbacks.call1("_onAppInviteFail", "User canceled");
-					}
-				}
-
-				@Override
-				public void onError(FacebookException e) {
-					if (callbacks!=null) {
-						callbacks.call1("_onAppInviteFail", e.toString());
-					}
-				}
-			});
-			appInviteDialog.show(content);
-		}
 	}
 
 	public static void shareLink(String contentURL, String quote, String hashtag) {

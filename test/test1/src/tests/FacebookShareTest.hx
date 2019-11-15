@@ -1,6 +1,5 @@
 package tests;
 
-import extension.facebook.AppInvite;
 import extension.facebook.AppRequests;
 import extension.facebook.Facebook;
 import extension.facebook.FriendList;
@@ -23,8 +22,7 @@ class FacebookShareTest extends TestCase {
 		Share.link(
 			"http://www.sempaigames.com/daktylos",
 			"El Daktylooos",
-			"http://www.sempaigames.com/images/daktylos/daktylos-poster-2.jpg",
-			"Juega al Daktylos, un divertido juego prehistorico =)"
+			"#game"
 		);
 	}
 

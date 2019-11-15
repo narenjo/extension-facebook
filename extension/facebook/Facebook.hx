@@ -211,63 +211,8 @@ public function getToken():String{
 		return "/" + str;
 	}
 
-	public function delete(
-		resource : String,
-		onComplete : Dynamic->Void = null,
-		parameters : Map<String, String> = null,
-		onError : Dynamic->Void = null
-	) : Void {
-
-		if (onComplete==null) {
-			onComplete = function(s) {};
-		}
-		if (parameters==null) {
-			parameters = new Map<String, String>();
-		}
-		if (onError==null) {
-			onError = function(s) {};
-		}
-		parameters.set("redirect", "false");
-		#if android
-		FacebookCFFI.graphRequest(
-			prependSlash(resource),
-			parameters,
-			"DELETE",
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onComplete(parsed);
-				} catch(error:String) { trace(error, x); }
-			},
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onError(parsed);
-				} catch(error:String) { trace(error, x); }	
-			}
-		);
-		#else
-		parameters.set("access_token", accessToken);
-		RestClient.deleteAsync(
-			"https://graph.facebook.com/v4.0"+prependSlash(resource),
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onComplete(parsed);
-				} catch(error:String) { trace(error, x); }
-			},
-			parameters,
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onError(parsed);
-				} catch(error:String) { trace(error, x); }	
-			}
-		);
-		#end
-	}
-
-	public function get(
+	function send(
+		method : String,
 		resource : String,
 		onComplete : Dynamic->Void = null,
 		parameters : Map<String, String> = null,
@@ -298,28 +243,28 @@ public function getToken():String{
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
 			aParameters,
-			"GET"
+			method
 		);
 		#elseif android
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
 			parameters,
-			"GET",
+			method,
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);
 					onComplete(parsed);
 				} catch(error:String) { trace(error, x); }
 			},
-			function(x){
+			function(x) {
 				try { 
 					var parsed = Json.parse(x);
 					onError(parsed);
-				} catch(error:String) { trace(error, x); }
+				} catch(error:String) { trace(error, x); }	
 			}
 		);
 		#elseif html5
-		FacebookJS.api(prependSlash(resource), "GET", parameters, function(response:Dynamic){
+		FacebookJS.api(prependSlash(resource), method, parameters, function(response:Dynamic){
 			if(response == null || response.error){
 				onError(response);
 			}
@@ -329,13 +274,22 @@ public function getToken():String{
 		});
 		#else
 		parameters.set("access_token", accessToken);
-		RestClient.getAsync(
+		var fGet = RestClient.getAsync.bind(_);
+		var fPost = RestClient.postAsync.bind(_);
+		var fDelete = RestClient.deleteAsync.bind(_);
+		var f;
+		switch (method){
+			case "POST" : f = fPost;
+			case "DELETE" : f = fDelete;
+			default : f = fGet;
+		}
+		f(
 			"https://graph.facebook.com/v4.0"+prependSlash(resource),
 			function(x) {
 				try { 
 					var parsed = Json.parse(x);
 					onComplete(parsed);
-				} catch(error:String) { trace(error, x); }		
+				} catch(error:String) { trace(error, x); }
 			},
 			parameters,
 			function(x) {
@@ -346,7 +300,36 @@ public function getToken():String{
 			}
 		);
 		#end
+	}
 
+	public function delete(
+		resource : String,
+		onComplete : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		send("DELETE", resource, onComplete, parameters, onError);
+	}
+
+	public function get(
+		resource : String,
+		onComplete : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		send("GET", resource, onComplete, parameters, onError);
+	}
+
+	public function post(
+		resource : String,
+		onComplete : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		send("POST", resource, onComplete, parameters, onError);
 	}
 
 	// get the full list of some resource (manages paging)
@@ -384,61 +367,4 @@ public function getToken():String{
 		);
 
 	}
-
-	public function post(
-		resource : String,
-		onComplete : Dynamic->Void = null,
-		parameters : Map<String, String> = null,
-		onError : Dynamic->Void = null
-	) : Void {
-
-		if (onComplete==null) {
-			onComplete = function(s) {};
-		}
-		if (parameters==null) {
-			parameters = new Map<String, String>();
-		}
-		if (onError==null) {
-			onError = function(s) {};
-		}
-		parameters.set("redirect", "false");
-		#if android
-		FacebookCFFI.graphRequest(
-			prependSlash(resource),
-			parameters,
-			"POST",
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onComplete(parsed);
-				} catch(error:String) { trace(error, x); }		
-			},
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onError(parsed);
-				} catch(error:String) { trace(error, x); }	
-			}
-		);
-		#else
-		parameters.set("access_token", accessToken);
-		RestClient.postAsync(
-			"https://graph.facebook.com/v4.0"+prependSlash(resource),
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onComplete(parsed);
-				} catch(error:String) { trace(error, x); }		
-			},
-			parameters,
-			function(x) {
-				try { 
-					var parsed = Json.parse(x);
-					onError(parsed);
-				} catch(error:String) { trace(error, x); }	
-			}
-		);
-		#end
-	}
-
 }
