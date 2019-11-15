@@ -1,5 +1,5 @@
 >:warning:
->For android please use a version of lime (git or striclty above 7.6.3) with updated Gradle and Gradle Android plugin.
+>For android please use a version of lime (git or strictly above 7.6.3) with updated Gradle and Gradle Android plugin.
 
 # extension-facebook
 Haxe OpenFL extension for Facebook, supports Facebook SDK for Android, iOS and HTML5. On other platforms uses Facebook REST API and logins using a Webview.
