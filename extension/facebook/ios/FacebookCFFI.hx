@@ -81,6 +81,7 @@ class FacebookCFFI {
 		recipients : Array<String> = null,
 		objectId : String = null,
 		actionType : Int = 0,
+		filters : Int = 0,
 		data : String = null
 	) {}
 
