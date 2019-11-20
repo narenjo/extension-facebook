@@ -132,6 +132,7 @@ namespace extension_facebook {
 		std::vector<std::string> &recipients,
 		std::string objectId,
 		int actionType,
+		int filters,
 		std::string data) {
 
 		FBSDKGameRequestContent *gameRequestContent = [[FBSDKGameRequestContent alloc] init];
@@ -162,6 +163,14 @@ namespace extension_facebook {
 			gameRequestContent.actionType = FBSDKGameRequestActionTypeSend;
 			break;
 		}
+
+		switch (filters) {
+			case 1:
+			gameRequestContent.filters = FBSDKGameRequestFilterAppUsers;
+			break;
+			case 2:
+			gameRequestContent.filters = FBSDKGameRequestFilterAppNonUsers;
+			break;
 
 		if (data!="") {
 			gameRequestContent.data = [NSString stringWithUTF8String:data.c_str()];
