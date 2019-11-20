@@ -105,9 +105,9 @@ class AppRequests {
 		}
 		switch(options.filters){
 			case APP_USERS:
-			newOpt.filters = extension.facebook.html5.Filters.app_user;
+			newOpt.filters = [extension.facebook.html5.Filters.app_users];
 			case APP_NON_USERS:
-			newOpt.filters = extension.facebook.html5.Filters.app_non_user;
+			newOpt.filters = [extension.facebook.html5.Filters.app_non_users];
 		}
 		trace(newOpt);
 		FacebookJS.ui(newOpt, function (response:GameRequestDialogResponse) {

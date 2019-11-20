@@ -130,8 +130,8 @@ extern typedef DialogParams = {
     var Turn = "turn";
 }
 @:enum extern abstract Filters(String) {
-	var app_user = "app_user";
-    var app_non_user = "app_non_user";
+	var app_users = "app_users";
+    var app_non_users = "app_non_users";
 }
 extern typedef ShareDialogParams = {
     > DialogParams,
@@ -153,7 +153,7 @@ extern typedef GameRequestDialogParams = {
     @:optional var action_type: ActionType;
     @:optional var data : String;
     @:optional var exclude_ids : Array<String>;
-    @:optional var filters: haxe.extern.EitherType<Filters, Array<{ name: String, user_ids: Array<String> }>>;//'app_users' | 'app_non_users' | Array<{ name: String, user_ids: Array<String> }>;
+    @:optional var filters: haxe.extern.EitherType<Array<Filters>, Array<{ name: String, user_ids: Array<String> }>>;//'app_users' | 'app_non_users' | Array<{ name: String, user_ids: Array<String> }>;
     @:optional var max_recipients : Float;
     @:optional var object_id : String;
     @:optional var suggestions : Array<String>;
