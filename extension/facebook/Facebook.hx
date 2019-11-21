@@ -139,7 +139,7 @@ public function getToken():String{
 				//Bug facebook logout
 				var cookieName = "fblo_" + untyped window.fbAppId;
 				if(js.Cookie.exists(cookieName)){
-					js.Cookie.remove(cookieName);
+					js.Cookie.remove(cookieName, "/");
 				}
 				fonComplete();
             }
