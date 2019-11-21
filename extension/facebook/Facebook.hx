@@ -143,6 +143,9 @@ public function getToken():String{
 				}
 				fonComplete();
             }
+			else if(response.status == Status.NOT_AUTHORIZED || response.status == Status.UNKNOWN){
+				fOnCancel();
+			}
 			else {
 				fOnError(response.status);
 			}
