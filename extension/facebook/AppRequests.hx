@@ -57,6 +57,7 @@ typedef FBObject = {
 	var from : UserData;
 	var message : String;
 	var created_time : String;
+	@:optional var data : String;
 }
 
 class AppRequests {

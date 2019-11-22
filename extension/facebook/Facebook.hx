@@ -359,7 +359,7 @@ public function getToken():String{
 				for (it in cast(data.data, Array<Dynamic>)) {
 					acum.push(it);
 				}
-				if (data.paging!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
+				if (data.paging!=null && data.paging.next!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
 					getAll(resource, onComplete, onError, acum, data.paging.cursors.after);
 				} else {
 					onComplete(acum);
