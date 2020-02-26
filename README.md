@@ -18,6 +18,7 @@ Once this is done, you just need to add this to your project.xml
 <haxelib name="extension-facebook" />
 ```
 
+iOS : the file ::EXPORT::/ios/::APP::/extension-admob-Info.plist. You must merge this file with ::APP::-Info.plist manually or with /usr/libexec/PlistBuddy
 
 ## Usage example
 
