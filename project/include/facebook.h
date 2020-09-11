@@ -34,6 +34,7 @@ namespace extension_facebook {
 		std::vector<std::string> &recipients,
 		std::string objectId,
 		int actionType,
+		int filters,
 		std::string data
 	);
 

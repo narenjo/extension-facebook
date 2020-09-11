@@ -171,12 +171,11 @@ namespace extension_facebook {
 			case 2:
 			gameRequestContent.filters = FBSDKGameRequestFilterAppNonUsers;
 			break;
-
+		}
 		if (data!="") {
 			gameRequestContent.data = [NSString stringWithUTF8String:data.c_str()];
 		}
 		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:callbacks];
-
 	}
 
 }

@@ -214,6 +214,7 @@ static value extension_facebook_appRequest(value *arg, int count) {
 		recipients,
 		objectId,
 		actionType,
+		filters,
 		data,
 		aSIZE
 	};
@@ -238,6 +239,7 @@ static value extension_facebook_appRequest(value *arg, int count) {
 		stlRecipients,
 		safe_val_string(arg[objectId]),
 		val_int(arg[actionType]),
+		val_int(arg[filters]),
 		safe_val_string(arg[data])
 	);
 
