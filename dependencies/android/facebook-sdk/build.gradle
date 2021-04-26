@@ -14,16 +14,16 @@ android {
 
 dependencies {
     // Facebook Core only (Analytics)
-    implementation 'com.facebook.android:facebook-core:[5,6)'
+    implementation 'com.facebook.android:facebook-core:[8,9)'
 
     // Facebook Login only
-    implementation 'com.facebook.android:facebook-login:[5,6)'
+    implementation 'com.facebook.android:facebook-login:[8,9)'
 
     // Facebook Share only
-    implementation 'com.facebook.android:facebook-share:[5,6)'
+    implementation 'com.facebook.android:facebook-share:[8,9)'
 
     // Facebook App Links only
-    implementation 'com.facebook.android:facebook-applinks:[5,6)'
+    implementation 'com.facebook.android:facebook-applinks:[8,9)'
 
     implementation project(':deps:extension-api')
 }
